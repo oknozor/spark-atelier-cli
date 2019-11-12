@@ -1,0 +1,3 @@
+[submodule "spark-atelier-cli-test"]
+	path = spark-atelier-cli-test
+	url = git@github.com:oknozor/spark-atelier-cli-test.git
