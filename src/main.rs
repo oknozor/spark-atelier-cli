@@ -5,8 +5,8 @@ use error::Error;
 
 use std::collections::HashMap;
 use std::env;
+use std::process::Command;
 use std::process::Output;
-use std::process::{Command, Stdio};
 
 fn main() -> Result<(), Error> {
     let args: Vec<String> = env::args().collect();
@@ -51,11 +51,7 @@ fn parse_args(args: &[String]) -> Option<&str> {
 }
 
 fn maven_test() -> Result<String, Error> {
-    let mvn_test = Command::new("mvn")
-        .arg("test")
-        .stdout(Stdio::piped())
-        .spawn()?
-        .wait_with_output()?;
+    let mvn_test = Command::new("mvn").arg("test").output()?;
     let stdout = mvn_test.stdout;
     String::from_utf8(stdout).map_err(|e| e.into())
 }
