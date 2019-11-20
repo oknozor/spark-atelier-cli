@@ -20,9 +20,9 @@ fn main() -> Result<(), Error> {
     let mvn = maven_test();
     println!("{}", mvn?);
 
-    git_add()?;
-    git_commit()?;
-    git_merge(1)?;
+    git_add().unwrap();
+    git_commit().unwrap();
+    git_merge(1).unwrap();
 
     Ok(())
 }
