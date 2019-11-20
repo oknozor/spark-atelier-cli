@@ -5,8 +5,8 @@ use error::Error;
 
 use std::collections::HashMap;
 use std::env;
-use std::process::Command;
 use std::process::Output;
+use std::process::{Command, Stdio};
 
 fn main() -> Result<(), Error> {
     let args: Vec<String> = env::args().collect();
@@ -35,9 +35,7 @@ fn group_name() -> Result<String, Error> {
         .try_into::<HashMap<String, String>>()
         .map_err(|e| e.into())
         .map(|conf| conf.get("group_name").cloned())
-        .map(|opt| {
-            opt.expect("expected a string value for `group_name")
-        })
+        .map(|opt| opt.expect("expected a string value for `group_name"))
 }
 
 fn parse_args(args: &[String]) -> Option<&str> {
@@ -53,7 +51,11 @@ fn parse_args(args: &[String]) -> Option<&str> {
 }
 
 fn maven_test() -> Result<String, Error> {
-    let mvn_test = Command::new("mvn").arg("test").output()?;
+    let mvn_test = Command::new("mvn")
+        .arg("test")
+        .stdout(Stdio::piped())
+        .spawn()?
+        .wait_with_output()?;
     let stdout = mvn_test.stdout;
     String::from_utf8(stdout).map_err(|e| e.into())
 }
