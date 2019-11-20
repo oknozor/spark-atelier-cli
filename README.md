@@ -6,7 +6,8 @@
 # Todo
 
 - [x] add all
-- [ ] commit
-- [ ] steps merge
+- [x] commit
+- [x] steps merge
+- [ ] hardcode exercices step branches
 - [ ] HTTP dashboard update
 - [ ] pipecolor
