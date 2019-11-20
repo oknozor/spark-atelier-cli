@@ -15,10 +15,10 @@ fn main() -> Result<(), Error> {
         println!("found group name in args: {}", group_name)
     }
 
-    let group_name = group_name()?;
+    let group_name = group_name().unwrap();
 
-    let mvn = maven_test();
-    println!("{}", mvn?);
+    let mvn = maven_test().unwrap();
+    println!("{}", mvn);
 
     git_add().unwrap();
     git_commit().unwrap();
