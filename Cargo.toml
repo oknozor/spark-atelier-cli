@@ -9,3 +9,4 @@ edition = "2018"
 [dependencies]
 reqwest = "0.9.22"
 config = "0.9.3"
+clap = "2.33.0"

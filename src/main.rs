@@ -1,4 +1,8 @@
 extern crate config;
+extern crate clap;
+
+use clap::SubCommand;
+use clap::App;
 
 mod error;
 use error::Error;
@@ -9,20 +13,26 @@ use std::process::Command;
 use std::process::Output;
 
 fn main() -> Result<(), Error> {
-    let args: Vec<String> = env::args().collect();
+    let matches = App::new("Le cli étincelant")
+        .version("1.0")
+        .author("Paul Delafosse <paul.delafosse.etu@univ-lille.fr>")
+        .about("C'est cool")
+        .subcommand(SubCommand::with_name("init").about("(re)initialiser votre projet"))
+        .subcommand(SubCommand::with_name("next").about("passer à l'étape suivante"))
+        .get_matches();
 
-    if let Some(group_name) = parse_args(&args) {
-        println!("found group name in args: {}", group_name)
+    if let Some(matches) = matches.subcommand_matches("init") {}
+
+    if let Some(matches) = matches.subcommand_matches("next") {
+        let group_name = group_name().unwrap();
+
+        let mvn = maven_test().unwrap();
+        println!("{}", mvn);
+
+        git_add().unwrap();
+        git_commit().unwrap();
+        git_merge(1).unwrap();
     }
-
-    let group_name = group_name().unwrap();
-
-    let mvn = maven_test().unwrap();
-    println!("{}", mvn);
-
-    git_add().unwrap();
-    git_commit().unwrap();
-    git_merge(1).unwrap();
 
     Ok(())
 }
@@ -36,18 +46,6 @@ fn group_name() -> Result<String, Error> {
         .map_err(|e| e.into())
         .map(|conf| conf.get("group_name").cloned())
         .map(|opt| opt.expect("expected a string value for `group_name"))
-}
-
-fn parse_args(args: &[String]) -> Option<&str> {
-    if args.len() > 2 {
-        if &args[1] != "--init" {
-            panic!("Expected param `--init` found {}", &args[1])
-        } else {
-            return Some(&args[2]);
-        }
-    }
-
-    None
 }
 
 fn maven_test() -> Result<String, Error> {
