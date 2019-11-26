@@ -24,7 +24,7 @@ pub mod git {
         Command::new("git")
             .arg("merge")
             .arg("--no-ff")
-            .arg("step2")
+            .arg(&format!("step{}", step + 1))
             .output()
             .map_err(|e| e.into())
     }
@@ -38,6 +38,6 @@ pub mod maven {
         let mvn_test = Command::new("mvn").arg("test").output()?;
         let success = mvn_test.status.success();
         let stdout = mvn_test.stdout;
-        Ok((success,String::from_utf8(stdout).unwrap()))
+        Ok((success, String::from_utf8(stdout).unwrap()))
     }
 }

@@ -1,7 +1,7 @@
-use short_crypt::ShortCrypt;
 use crate::dashboard::Team;
-use std::fs::File;
+use short_crypt::ShortCrypt;
 use std::fs;
+use std::fs::File;
 use std::io::prelude::*;
 
 const SECRET: &str = "LACLEFMEGALONGUEPOURCRYPTERLESTRUC";
@@ -13,13 +13,12 @@ pub struct ForemanConfig {
 }
 
 pub fn write(team: &Team) -> std::io::Result<()> {
-
     let _ = fs::remove_file("config");
 
     let config = ForemanConfig {
         id: team.id,
         name: team.name.clone(),
-        step: team.step_count
+        step: team.step_count,
     };
 
     let serialized = serde_json::to_string(&config).unwrap();

@@ -1,6 +1,5 @@
 use crate::foreman_config::ForemanConfig;
 use reqwest::Error;
-use reqwest::StatusCode;
 
 #[derive(Serialize, Deserialize)]
 struct NewTeam {
@@ -43,15 +42,34 @@ pub fn step_forward(config: &ForemanConfig) -> Result<(), Error> {
         step_id: config.step + 1,
     };
 
-    let status = client
+    client
         .post(&format!(
             "{}/teams/{}/completeStep",
             super::DASHBOARD_URL,
             config.id,
         ))
         .json(&step_request)
-        .send()?
-        .status();
+        .send()?;
+
+    Ok(())
+}
+
+pub fn step_failed(config: &ForemanConfig) -> Result<(), Error> {
+    let client = reqwest::Client::new();
+
+    let step_request = StepRequest {
+        group_id: config.id,
+        step_id: config.step,
+    };
+
+    client
+        .post(&format!(
+            "{}/teams/{}/failStep",
+            super::DASHBOARD_URL,
+            config.id,
+        ))
+        .json(&step_request)
+        .send()?;
 
     Ok(())
 }

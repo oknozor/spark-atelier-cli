@@ -38,17 +38,20 @@ fn main() -> Result<(), Error> {
     }
 
     if let Some(_matches) = _matches.subcommand_matches("next") {
-
         let config = foreman_config::get()?;
         let mvn = command::maven::test().unwrap();
         println!("{}", mvn.1);
 
         command::git::add().unwrap();
         command::git::commit().unwrap();
-        command::git::merge(1).unwrap();
+        command::git::merge(config.step).unwrap();
 
         if mvn.0 {
-            dashboard::step_forward(&config).expect("Contact Paul ou Lucas quelque chose c'est mal passé")
+            dashboard::step_forward(&config)
+                .expect("Contact Paul ou Lucas quelque chose c'est mal passé")
+        } else {
+            dashboard::step_failed(&config)
+                .expect("Contact Paul ou Lucas quelque chose c'est mal passé")
         }
     }
 
