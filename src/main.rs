@@ -1,19 +1,27 @@
-extern crate config;
 extern crate clap;
+extern crate config;
+extern crate reqwest;
+#[macro_use]
+extern crate serde_derive;
+extern crate serde;
 
-use clap::SubCommand;
 use clap::App;
+use clap::SubCommand;
+
+mod dashboard;
+mod foreman_config;
+
+pub mod command;
 
 mod error;
 use error::Error;
 
-use std::collections::HashMap;
-use std::env;
-use std::process::Command;
-use std::process::Output;
+extern crate short_crypt;
+
+const DASHBOARD_URL: &str = "http://localhost:8080";
 
 fn main() -> Result<(), Error> {
-    let matches = App::new("Le cli étincelant")
+    let _matches = App::new("Le cli étincelant")
         .version("1.0")
         .author("Paul Delafosse <paul.delafosse.etu@univ-lille.fr>")
         .about("C'est cool")
@@ -21,61 +29,28 @@ fn main() -> Result<(), Error> {
         .subcommand(SubCommand::with_name("next").about("passer à l'étape suivante"))
         .get_matches();
 
-    if let Some(matches) = matches.subcommand_matches("init") {}
+    if let Some(_matches) = _matches.subcommand_matches("init") {
+        let team = dashboard::create_team("GrosBill")
+            .expect("Une erreur est survenue, contactes Paul ou Lucas");
 
-    if let Some(matches) = matches.subcommand_matches("next") {
-        let group_name = group_name().unwrap();
+        foreman_config::write(&team)?;
+        println!("{}", foreman_config::get().unwrap().step);
+    }
 
-        let mvn = maven_test().unwrap();
-        println!("{}", mvn);
+    if let Some(_matches) = _matches.subcommand_matches("next") {
 
-        git_add().unwrap();
-        git_commit().unwrap();
-        git_merge(1).unwrap();
+        let config = foreman_config::get()?;
+        let mvn = command::maven::test().unwrap();
+        println!("{}", mvn.1);
+
+        command::git::add().unwrap();
+        command::git::commit().unwrap();
+        command::git::merge(1).unwrap();
+
+        if mvn.0 {
+            dashboard::step_forward(&config).expect("Contact Paul ou Lucas quelque chose c'est mal passé")
+        }
     }
 
     Ok(())
-}
-
-fn group_name() -> Result<String, Error> {
-    let mut settings = config::Config::default();
-    settings.merge(config::File::with_name("config"))?;
-
-    settings
-        .try_into::<HashMap<String, String>>()
-        .map_err(|e| e.into())
-        .map(|conf| conf.get("group_name").cloned())
-        .map(|opt| opt.expect("expected a string value for `group_name"))
-}
-
-fn maven_test() -> Result<String, Error> {
-    let mvn_test = Command::new("mvn").arg("test").output()?;
-    let stdout = mvn_test.stdout;
-    String::from_utf8(stdout).map_err(|e| e.into())
-}
-
-fn git_add() -> Result<Output, Error> {
-    Command::new("git")
-        .arg("add")
-        .arg("-A")
-        .output()
-        .map_err(|e| e.into())
-}
-
-fn git_commit() -> Result<Output, Error> {
-    Command::new("git")
-        .arg("commit")
-        .arg("-m")
-        .arg("\"solve step\"")
-        .output()
-        .map_err(|e| e.into())
-}
-
-fn git_merge(step: i32) -> Result<Output, Error> {
-    Command::new("git")
-        .arg("merge")
-        .arg("--no-ff")
-        .arg("step2")
-        .output()
-        .map_err(|e| e.into())
 }

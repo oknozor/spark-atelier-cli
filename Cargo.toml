@@ -4,9 +4,11 @@ version = "0.1.0"
 authors = ["Paul Delafosse <paul.delafosse@protonmail.com>"]
 edition = "2018"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
 reqwest = "0.9.22"
 config = "0.9.3"
 clap = "2.33.0"
+serde = "^1"
+serde_json = "^1"
+serde_derive = "^1.0"
+short-crypt = "1.0.14"
