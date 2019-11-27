@@ -15,7 +15,7 @@ use termion::raw::RawTerminal;
 use termion::style;
 
 type Terminal = MouseTerminal<RawTerminal<Stdout>>;
-pub fn walkthrough() {
+pub fn walkthrough() -> String {
     let mut term: Terminal = MouseTerminal::from(io::stdout().into_raw_mode().unwrap());
 
     let atelier_1 = " _________                   __        _____   __         .__  .__".to_owned();
@@ -101,9 +101,7 @@ pub fn walkthrough() {
 
     print_delayed("Compris ?".chars(), None, None, 20, &mut term);
 
-    let stdin = stdin();
-
-    for c in stdin.keys() {
+    for c in stdin().keys() {
         match c.unwrap() {
             Key::Char('\n') => break,
             _ => {
@@ -123,7 +121,7 @@ pub fn walkthrough() {
     }
 
     println!();
-    print_delayed("Parfait, pour valider un exercice vous aller devoir faire passer les tests unitaire de chaque exercice".chars(), None, None, 20, &mut term);
+    print_delayed("Parfait, pour valider un exercice vous aller devoir faire passer les tests unitaires de chaque exercice".chars(), None, None, 20, &mut term);
     print_delayed("Si un exercice est validé vous pourrez voir votre score augmenter sur le tableau des scores.".chars(), None, None, 20, &mut term);
     print_delayed(
         "En revanche, si vous tentez de me soumettre un exercice non valide".chars(),
@@ -174,7 +172,7 @@ pub fn walkthrough() {
     print_delayed(message.chars(), None, None, 20, &mut term);
 
     let message = format!(
-        "\t{bold}{red}❌{reset}  Sinon c'est la honte et vous êtes bloquer tant que j'exercice n'est pas validé",
+        "\t{bold}{red}❌{reset}  Sinon c'est la honte et vous êtes bloquer tant que l'exercice n'est pas validé",
         bold = style::Bold,
         red = color::Fg(color::Red),
         reset = style::Reset
@@ -183,16 +181,67 @@ pub fn walkthrough() {
     print_delayed(message.chars(), None, None, 20, &mut term);
 
     println!();
-    print_delayed("Avant de rentrer dans la compétition j'aurai besoin d'enregistrer le nom de votre équipe.".chars(), None, None, 20, &mut term);
+    print_delayed(
+        "Avant de rentrer dans la compétition j'aurai besoin d'enregistrer le nom de votre équipe."
+            .chars(),
+        None,
+        None,
+        20,
+        &mut term,
+    );
 
     let message = format!(
         "Donnez moi un blaze qui claque, je veux du {bold}{pink}SWAG{reset} : ",
         bold = style::Bold,
-        pink = color::Fg(color::Rgb(255,51,241)),
+        pink = color::Fg(color::Rgb(255, 51, 241)),
         reset = style::Reset
     );
 
     print_delayed(message.chars(), None, None, 20, &mut term);
+
+    let team_name = type_team_name(&mut term);
+    let message = format!(
+        "\"{cyan}{bold}{team_name}{reset}\", personellement j'aurai choisi un nom plus badass, on valide ? {bold}({green}O{reset}/{red}N){reset}",
+        bold = style::Bold,
+        green = color::Fg(color::Green),
+        red = color::Fg(color::Red),
+        cyan = color::Fg(color::Cyan),
+        reset = style::Reset,
+        team_name = &team_name
+    );
+
+    print_delayed(message.chars(), None, None, 20, &mut term);
+
+    if validate_team_name(&team_name, &mut term) {
+        return team_name.clone()
+    }
+
+    loop {
+        print_delayed(
+            "On change alors c'est quoi ce nom ?".chars(),
+            None,
+            None,
+            20,
+            &mut term,
+        );
+
+        let team_name = type_team_name(&mut term);
+
+        let message = format!(
+            "\"{bold}{cyan}{team_name}{reset}\", on valide ? {bold}({green}O{reset}/{red}N){reset}",
+            bold = style::Bold,
+            green = color::Fg(color::Green),
+            red = color::Fg(color::Red),
+            cyan = color::Fg(color::Cyan),
+            reset = style::Reset,
+            team_name = &team_name
+        );
+        print_delayed(message.chars(), None, None, 20, &mut term);
+
+        if validate_team_name(&team_name, &mut term) {
+            return team_name.clone();
+        }
+    }
 }
 
 fn print_delayed(
@@ -222,4 +271,62 @@ fn print_delayed(
     }
     write!(stdout, "{}", termion::cursor::Goto(1, position.1 + 1)).unwrap();
     print!("{}", style::Reset);
+}
+
+fn type_team_name(term: &mut Terminal) -> String {
+    let mut team_name = String::new();
+    for c in stdin().keys() {
+        // Input
+        match c.unwrap() {
+            Key::Char('\n') => break,
+            Key::Backspace => {
+                write!(
+                    term,
+                    "{} {}",
+                    termion::cursor::Left(1),
+                    termion::cursor::Left(1),
+                )
+                .unwrap();
+            }
+            Key::Char(c) => {
+                team_name.push(c);
+                write!(term, "{}", c).unwrap()
+            }
+            _ => (),
+        }
+        term.flush().unwrap();
+    }
+
+    println!();
+
+    team_name
+}
+
+fn validate_team_name(team_name: &String, term: &mut Terminal) -> bool {
+    let mut validate = false;
+    for c in stdin().keys() {
+        match c.unwrap() {
+            Key::Char('N') => {
+                validate = false;
+                break;
+            }
+            Key::Char('O') => {
+                validate = true;
+                break;
+            }
+            _ => {
+                let message = format!(
+                    "\"{bold}{cyan}{team_name}{reset}\", on valide ? {bold}({green}O{reset}/{red}N){reset}",
+                    bold = style::Bold,
+                    green = color::Fg(color::Green),
+                    red = color::Fg(color::Red),
+                    cyan = color::Fg(color::Cyan),
+                    reset = style::Reset,
+                    team_name = &team_name
+                );
+                print_delayed(message.chars(), None, None, 20, term);
+            }
+        }
+    }
+    validate
 }

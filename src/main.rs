@@ -32,8 +32,8 @@ fn main() -> Result<(), Error> {
         .get_matches();
 
     if let Some(_matches) = _matches.subcommand_matches("init") {
-        wizard::walkthrough();
-        let team = dashboard::create_team("GrosBill")
+        let team_name = wizard::walkthrough();
+        let team = dashboard::create_team(&team_name)
             .expect("Une erreur est survenue, contactes Paul ou Lucas");
 
         foreman_config::write(&team)?;
