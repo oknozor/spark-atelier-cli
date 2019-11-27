@@ -5,6 +5,7 @@ use std::fs::File;
 use std::io::prelude::*;
 
 const SECRET: &str = "LACLEFMEGALONGUEPOURCRYPTERLESTRUC";
+
 #[derive(Serialize, Deserialize)]
 pub struct ForemanConfig {
     pub id: i32,
