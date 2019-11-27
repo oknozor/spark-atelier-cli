@@ -201,7 +201,7 @@ pub fn walkthrough() -> String {
 
     let team_name = type_team_name(&mut term);
     let message = format!(
-        "\"{cyan}{bold}{team_name}{reset}\", personellement j'aurai choisi un nom plus badass, on valide ? {bold}({green}O{reset}/{red}N){reset}",
+        "\"{cyan}{bold}{team_name}{reset}\", personellement j'aurai choisi un nom plus badass, on valide ? {bold}({green}O{reset}/{red}N{reset})",
         bold = style::Bold,
         green = color::Fg(color::Green),
         red = color::Fg(color::Red),
