@@ -19,7 +19,7 @@ pub fn write(team: &Team) -> std::io::Result<()> {
     let config = ForemanConfig {
         id: team.id,
         name: team.name.clone(),
-        step: team.step_count,
+        step: team.current_step_id,
     };
 
     let serialized = serde_json::to_string(&config).unwrap();

@@ -11,7 +11,7 @@ struct NewTeam {
 pub struct Team {
     pub id: i32,
     pub name: String,
-    pub step_count: i32,
+    pub current_step_id: i32,
 }
 
 #[derive(Serialize, Deserialize)]
