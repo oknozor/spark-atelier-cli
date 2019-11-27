@@ -1,6 +1,8 @@
 use crate::foreman_config::ForemanConfig;
 use reqwest::Error;
 
+const AUTH: &str = "xFeGdHjhqsixiZBUntXvSTGGMfsIzOcshZIVxWVoxnjWyzDXhTxHyiwbnoZnTVttFgJFCglnmHYyLhWSverHWCPMGSsumXPkyuWV";
+
 #[derive(Serialize, Deserialize)]
 struct NewTeam {
     pub name: String,
@@ -29,6 +31,7 @@ pub fn create_team(name: &str) -> Result<Team, reqwest::Error> {
 
     client
         .post(&format!("{}/teams", super::DASHBOARD_URL))
+        .header("auth", AUTH)
         .json(&team)
         .send()?
         .json()
@@ -48,6 +51,7 @@ pub fn step_forward(config: &ForemanConfig) -> Result<Team, reqwest::Error> {
             super::DASHBOARD_URL,
             config.id,
         ))
+        .header("auth", AUTH)
         .json(&step_request)
         .send()?
         .json()
@@ -67,6 +71,7 @@ pub fn step_failed(config: &ForemanConfig) -> Result<(), Error> {
             super::DASHBOARD_URL,
             config.id,
         ))
+        .header("auth", AUTH)
         .json(&step_request)
         .send()?;
 

@@ -64,7 +64,6 @@ fn main() -> Result<(), Error> {
         } else {
             team_name = wizard::walkthrough();
         }
-        println!("{}", &team_name);
 
         let team = dashboard::create_team(&team_name)
             .expect("Une erreur est survenue, contactes Paul ou Lucas");
