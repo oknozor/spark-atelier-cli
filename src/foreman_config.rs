@@ -6,7 +6,7 @@ use std::io::prelude::*;
 
 const SECRET: &str = "LACLEFMEGALONGUEPOURCRYPTERLESTRUC";
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct ForemanConfig {
     pub id: i32,
     pub name: String,

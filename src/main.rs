@@ -45,17 +45,22 @@ fn main() -> Result<(), Error> {
                         .takes_value(true)
                 ),
         )
-        .subcommand(SubCommand::with_name("next").about("passer à l'étape suivante"))
+        .subcommand(SubCommand::with_name("next").about("Passer à l'étape suivante"))
+        .subcommand(SubCommand::with_name("info").about("Affiche votre progression actuelle"))
         .get_matches();
+
+    if let Some(_) = _matches.subcommand_matches("info") {
+        println!("{:?}", foreman_config::get().unwrap());
+    }
 
     if let Some(matches) = _matches.subcommand_matches("init") {
         let team_name;
 
         if matches.is_present("hard") {
             team_name = matches
-            .value_of("hard")
-            .map(|name| name.to_owned())
-            .unwrap();
+                .value_of("hard")
+                .map(|name| name.to_owned())
+                .unwrap();
         } else {
             team_name = wizard::walkthrough();
         }
@@ -68,7 +73,7 @@ fn main() -> Result<(), Error> {
         println!("{}", foreman_config::get().unwrap().step);
     }
 
-    if let Some(_matches) = _matches.subcommand_matches("next") {
+    if let Some(_) = _matches.subcommand_matches("next") {
         let config = foreman_config::get()?;
         let test_passed = command::maven::test().unwrap();
 
