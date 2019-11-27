@@ -259,6 +259,9 @@ fn print_delayed(
         print!("{}", bold);
     }
 
+    let position = stdout.cursor_pos().unwrap();
+    write!(stdout, "{}", termion::cursor::Goto(1, position.1)).unwrap();
+
     for c in chars {
         print!("{}", c);
         thread::sleep(Duration::from_millis(speed));
@@ -267,6 +270,7 @@ fn print_delayed(
 
     let position = stdout.cursor_pos().unwrap();
     let size = termion::terminal_size().unwrap();
+    write!(stdout, "{}", termion::cursor::Goto(1, position.1 + 1)).unwrap();
     if size.1 == position.1 {
         write!(stdout, "{}", termion::scroll::Up(1)).unwrap();
     }
@@ -288,6 +292,7 @@ fn type_team_name(term: &mut Terminal) -> String {
                     termion::cursor::Left(1),
                 )
                 .unwrap();
+                let _ = team_name.pop();
             }
             Key::Char(c) => {
                 team_name.push(c);
