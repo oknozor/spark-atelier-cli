@@ -20,10 +20,14 @@ use error::Error;
 
 extern crate short_crypt;
 
+//TODO:
+// - mettre la vrai URL
+// - Hard reset (avec supression de la team dans le back)
+// - optional (maven color)
 const DASHBOARD_URL: &str = "http://localhost:8080";
 
 fn main() -> Result<(), Error> {
-    let _matches = App::new("Le cli étincelant")
+    let _matches = App::new("Foreman le contremaître")
         .version("1.0")
         .author("Paul Delafosse <paul.delafosse.etu@univ-lille.fr>")
         .about("Cli pour l'atelier spark - Université de Lille - IFI - 2019")

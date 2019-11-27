@@ -244,6 +244,7 @@ pub fn walkthrough() -> String {
     }
 }
 
+
 fn print_delayed(
     chars: Chars,
     bold: Option<style::Bold>,
