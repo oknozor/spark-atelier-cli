@@ -24,7 +24,7 @@ extern crate short_crypt;
 //TODO:
 // - mettre la vrai URL
 // - optional (maven color)
-// répondre à steComplete avec l'état de la team pour mettre à jours la conf
+// - step hint
 const DASHBOARD_URL: &str = "http://localhost:8080";
 
 fn main() -> Result<(), Error> {
