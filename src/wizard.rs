@@ -57,13 +57,7 @@ pub fn walkthrough() -> String {
     ];
 
     lines.iter().for_each(|line| {
-        print_delayed(
-            line.chars(),
-            Some(style::Bold),
-            color::Green,
-            8,
-            &mut term,
-        )
+        print_delayed(line.chars(), Some(style::Bold), color::Green, 8, &mut term)
     });
 
     println!();

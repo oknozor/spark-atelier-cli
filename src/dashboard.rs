@@ -51,6 +51,7 @@ pub fn step_forward(config: &ForemanConfig) -> Result<(), Error> {
         .json(&step_request)
         .send()?;
 
+
     Ok(())
 }
 
