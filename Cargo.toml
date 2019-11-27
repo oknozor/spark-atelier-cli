@@ -1,5 +1,5 @@
 [package]
-name = "next"
+name = "foreman"
 version = "0.1.0"
 authors = ["Paul Delafosse <paul.delafosse@protonmail.com>"]
 edition = "2018"
@@ -12,3 +12,4 @@ serde = "^1"
 serde_json = "^1"
 serde_derive = "^1.0"
 short-crypt = "1.0.14"
+termion = "1.5.3"

@@ -1,0 +1,225 @@
+use std::io;
+use std::io::stdin;
+use std::io::Stdout;
+use std::io::Write;
+use std::str::Chars;
+use std::thread;
+use std::time::Duration;
+use termion::color;
+use termion::cursor::DetectCursorPos;
+use termion::event::Key;
+use termion::input::MouseTerminal;
+use termion::input::TermRead;
+use termion::raw::IntoRawMode;
+use termion::raw::RawTerminal;
+use termion::style;
+
+type Terminal = MouseTerminal<RawTerminal<Stdout>>;
+pub fn walkthrough() {
+    let mut term: Terminal = MouseTerminal::from(io::stdout().into_raw_mode().unwrap());
+
+    let atelier_1 = " _________                   __        _____   __         .__  .__".to_owned();
+
+    let atelier_2 =
+        "/   _____/__________ _______|  | __   /  _  \\_/  |_  ____ |  | |__| ___________"
+            .to_owned();
+
+    let atelier_3= "\\_____  \\\\____ \\__  \\\\_  __ \\  |/ /  /  /_\\  \\   __\\/ __ \\|  | |  |/ __ \\_  __ \\".to_owned();
+
+    let atelier_4 =
+        "/        \\  |_> > __ \\|  | \\/    <  /    |    \\  | \\  ___/|  |_|  \\  ___/|  | \\/"
+            .to_owned();
+
+    let atelier_5 =
+        "/_______  /   __(____  /__|  |__|_ \\ \\____|__  /__|  \\___  >____/__|\\___  >__|"
+            .to_owned();
+
+    let atelier_6 =
+        "        \\/|__|       \\/           \\/         \\/          \\/             \\/     "
+            .to_owned();
+
+    let lines = vec![
+        atelier_1, atelier_2, atelier_3, atelier_4, atelier_5, atelier_6,
+    ];
+
+    lines.iter().for_each(|line| {
+        print_delayed(
+            line.chars(),
+            Some(style::Bold),
+            Some(color::Green),
+            8,
+            &mut term,
+        )
+    });
+
+    println!();
+    println!();
+    println!();
+
+    let message = format!(
+    "Bonjour {bold}{red}camarade{reset}, je suis foreman, ton contremaitre. Bienvenue dans mon atelier.",
+        bold = style::Bold,
+        red = color::Fg(color::Red),
+        reset = style::Reset
+    );
+
+    print_delayed(message.chars(), None, None, 20, &mut term);
+
+    let message = format!(
+        "Aujourd'hui nous allons apprendre à utiliser Apache {bold}{red}S{blue}p{magenta}a{green}r{cyan}k{reset}",
+            bold = style::Bold,
+            red = color::Fg(color::Red),
+            blue = color::Fg(color::Blue),
+            magenta = color::Fg(color::Magenta),
+            green = color::Fg(color::Green),
+            cyan = color::Fg(color::Cyan),
+            reset = style::Reset
+        );
+
+    print_delayed(message.chars(), None, None, 20, &mut term);
+    println!();
+
+    let message =
+        "Au cours de cet atelier vous allez devoir accomplir une série d'exercices.".to_owned();
+    print_delayed(message.chars(), None, None, 20, &mut term);
+
+    let message = format!(
+        "Pour valider un exercice appeler moi à l'aide de la commande {bold}{green}`./foreman next`{reset}.",
+        bold = style::Bold,
+        green = color::Fg(color::Green),
+        reset = style::Reset
+    );
+    print_delayed(message.chars(), None, None, 20, &mut term);
+
+    let message = format!(
+        "{bold}{red}C'est la SEULE commande dont vous aurez besoin!{reset}",
+        bold = style::Bold,
+        red = color::Fg(color::Red),
+        reset = style::Reset
+    );
+    print_delayed(message.chars(), None, None, 20, &mut term);
+
+    print_delayed("Compris ?".chars(), None, None, 20, &mut term);
+
+    let stdin = stdin();
+
+    for c in stdin.keys() {
+        match c.unwrap() {
+            Key::Char('\n') => break,
+            _ => {
+                let position = term.cursor_pos().unwrap();
+                let size = termion::terminal_size().unwrap();
+                if size.1 == position.1 {
+                    write!(term, "{}", termion::scroll::Up(1)).unwrap();
+                }
+                write!(
+                    term,
+                    "{}Si c'est bien compris presses entrée",
+                    termion::cursor::Goto(1, position.1 + 1)
+                )
+                .unwrap();
+            }
+        }
+    }
+
+    println!();
+    print_delayed("Parfait, pour valider un exercice vous aller devoir faire passer les tests unitaire de chaque exercice".chars(), None, None, 20, &mut term);
+    print_delayed("Si un exercice est validé vous pourrez voir votre score augmenter sur le tableau des scores.".chars(), None, None, 20, &mut term);
+    print_delayed(
+        "En revanche, si vous tentez de me soumettre un exercice non valide".chars(),
+        None,
+        None,
+        20,
+        &mut term,
+    );
+
+    let message = format!(
+        "je ne manquerai pas de vous couvrir de honte devant vos {bold}{red}camarades{reset}.",
+        bold = style::Bold,
+        red = color::Fg(color::Red),
+        reset = style::Reset
+    );
+
+    print_delayed(message.chars(), None, None, 20, &mut term);
+
+    println!();
+
+    print_delayed("On résume :".chars(), None, None, 20, &mut term);
+
+    let message = format!(
+        "\t{bold}{green}✔️{reset} Implementer l'exercice demander ",
+        bold = style::Bold,
+        green = color::Fg(color::Green),
+        reset = style::Reset
+    );
+
+    print_delayed(message.chars(), None, None, 20, &mut term);
+
+    let message = format!(
+        "\t{bold}{green}✔️{reset} Utiliser la commande {bold}{green}`./formeman next`{reset}",
+        bold = style::Bold,
+        green = color::Fg(color::Green),
+        reset = style::Reset
+    );
+
+    print_delayed(message.chars(), None, None, 20, &mut term);
+
+    let message = format!(
+        "\t{bold}{green}✔️{reset} Si tout c'est bien passer, je vous donnerai un nouvel exercice",
+        bold = style::Bold,
+        green = color::Fg(color::Green),
+        reset = style::Reset
+    );
+
+    print_delayed(message.chars(), None, None, 20, &mut term);
+
+    let message = format!(
+        "\t{bold}{red}❌{reset}  Sinon c'est la honte et vous êtes bloquer tant que j'exercice n'est pas validé",
+        bold = style::Bold,
+        red = color::Fg(color::Red),
+        reset = style::Reset
+    );
+
+    print_delayed(message.chars(), None, None, 20, &mut term);
+
+    println!();
+    print_delayed("Avant de rentrer dans la compétition j'aurai besoin d'enregistrer le nom de votre équipe.".chars(), None, None, 20, &mut term);
+
+    let message = format!(
+        "Donnez moi un blaze qui claque, je veux du {bold}{pink}SWAG{reset} : ",
+        bold = style::Bold,
+        pink = color::Fg(color::Rgb(255,51,241)),
+        reset = style::Reset
+    );
+
+    print_delayed(message.chars(), None, None, 20, &mut term);
+}
+
+fn print_delayed(
+    chars: Chars,
+    bold: Option<style::Bold>,
+    color: Option<color::Green>,
+    speed: u64,
+    stdout: &mut Terminal,
+) {
+    if let Some(color) = color {
+        print!("{}", color::Fg(color));
+    }
+    if let Some(bold) = bold {
+        print!("{}", bold);
+    }
+
+    for c in chars {
+        print!("{}", c);
+        thread::sleep(Duration::from_millis(speed));
+        stdout.flush().unwrap();
+    }
+
+    let position = stdout.cursor_pos().unwrap();
+    let size = termion::terminal_size().unwrap();
+    if size.1 == position.1 {
+        write!(stdout, "{}", termion::scroll::Up(1)).unwrap();
+    }
+    write!(stdout, "{}", termion::cursor::Goto(1, position.1 + 1)).unwrap();
+    print!("{}", style::Reset);
+}

@@ -32,12 +32,22 @@ pub mod git {
 
 pub mod maven {
     use crate::error::Error;
+    use std::io::BufRead;
+    use std::io::BufReader;
     use std::process::Command;
+    use std::process::Stdio;
 
-    pub fn test() -> Result<(bool, String), Error> {
-        let mvn_test = Command::new("mvn").arg("test").output()?;
-        let success = mvn_test.status.success();
-        let stdout = mvn_test.stdout;
-        Ok((success, String::from_utf8(stdout).unwrap()))
+    pub fn test() -> Result<bool, Error> {
+        let mut child = Command::new("mvn")
+            .arg("test")
+            .stdout(Stdio::piped())
+            .spawn()?;
+
+        BufReader::new(child.stdout.take().unwrap())
+            .lines()
+            .for_each(|line| println!("{}", line.unwrap_or("".into())));
+
+        let success = child.wait()?.success();
+        Ok(success)
     }
 }
