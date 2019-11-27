@@ -273,7 +273,7 @@ pub fn shame() {
     );
 }
 
-pub fn concrat() {
+pub fn congrat() {
     let mut term: Terminal = MouseTerminal::from(io::stdout().into_raw_mode().unwrap());
 
     print_delayed(

@@ -78,10 +78,12 @@ fn main() -> Result<(), Error> {
 
         if test_passed {
             dashboard::step_forward(&config)
-                .expect("Contact Paul ou Lucas quelque chose c'est mal passé")
+                .expect("Contact Paul ou Lucas quelque chose c'est mal passé");
+            wizard::congrat();
         } else {
             dashboard::step_failed(&config)
-                .expect("Contact Paul ou Lucas quelque chose c'est mal passé")
+                .expect("Contact Paul ou Lucas quelque chose c'est mal passé");
+            wizard::shame();
         }
     }
 
