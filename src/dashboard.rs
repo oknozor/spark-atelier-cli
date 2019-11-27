@@ -34,7 +34,7 @@ pub fn create_team(name: &str) -> Result<Team, reqwest::Error> {
         .json()
 }
 
-pub fn step_forward(config: &ForemanConfig) -> Result<(), Error> {
+pub fn step_forward(config: &ForemanConfig) -> Result<Team, reqwest::Error> {
     let client = reqwest::Client::new();
 
     let step_request = StepRequest {
@@ -49,9 +49,8 @@ pub fn step_forward(config: &ForemanConfig) -> Result<(), Error> {
             config.id,
         ))
         .json(&step_request)
-        .send()?;
-
-    Ok(())
+        .send()?
+        .json()
 }
 
 pub fn step_failed(config: &ForemanConfig) -> Result<(), Error> {

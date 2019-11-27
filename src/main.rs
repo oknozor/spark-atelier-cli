@@ -82,8 +82,10 @@ fn main() -> Result<(), Error> {
         command::git::merge(config.step).unwrap();
 
         if test_passed {
-            dashboard::step_forward(&config)
+            let team = dashboard::step_forward(&config)
                 .expect("Contact Paul ou Lucas quelque chose c'est mal passé");
+
+            foreman_config::write(&team)?;
             wizard::congrat();
         } else {
             dashboard::step_failed(&config)
