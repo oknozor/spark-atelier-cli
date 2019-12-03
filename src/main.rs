@@ -25,7 +25,7 @@ extern crate short_crypt;
 // - mettre la vrai URL
 // - optional (maven color)
 // - step hint
-const DASHBOARD_URL: &str = "http://localhost:8080";
+const DASHBOARD_URL: &str = "http://spark-leaderboard-backend.hoohoot.org";
 
 fn main() -> Result<(), Error> {
     let _matches = App::new("Foreman le contremaître")
@@ -76,16 +76,17 @@ fn main() -> Result<(), Error> {
         let config = foreman_config::get()?;
         let test_passed = command::maven::test().unwrap();
 
-        command::git::add().unwrap();
-        command::git::commit().unwrap();
-        command::git::merge(config.step).unwrap();
-
         if test_passed {
-            let team = dashboard::step_forward(&config)
-                .expect("Contact Paul ou Lucas quelque chose c'est mal passé");
+            command::git::add().unwrap();
+            if let Ok(_) = command::git::commit() {
+                command::git::merge(config.step).unwrap();
 
-            foreman_config::write(&team)?;
-            wizard::congrat();
+                let team = dashboard::step_forward(&config)
+                    .expect("Contact Paul ou Lucas quelque chose c'est mal passé");
+
+                foreman_config::write(&team)?;
+                wizard::congrat();
+            }
         } else {
             dashboard::step_failed(&config)
                 .expect("Contact Paul ou Lucas quelque chose c'est mal passé");
