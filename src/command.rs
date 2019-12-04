@@ -24,7 +24,7 @@ pub mod git {
         Command::new("git")
             .arg("merge")
             .arg("--no-ff")
-            .arg(&format!("step{}", step + 1))
+            .arg(&format!("origin/step{}", step + 1))
             .output()
             .map_err(|e| e.into())
     }
