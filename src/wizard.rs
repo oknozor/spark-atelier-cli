@@ -23,8 +23,8 @@ const JUICE_MESSAGES: [&str; 4] = [
 ];
 const SHAME_MESSAGES: [&str; 3] = [
     "Shame, shame, shame 👎!",
-    "Vous n'avez pas lu la consigne 🤔?",
-    "La prochaine fois, j'appelle Gilles Grimmaud 👀",
+    "Vous n'avez pas lu la consigne ?",
+    "La prochaine fois, j'appelle Gilles Grimaud 👀",
 ];
 
 type Terminal = MouseTerminal<RawTerminal<Stdout>>;
@@ -120,7 +120,7 @@ pub fn walkthrough() -> String {
                 }
                 write!(
                     term,
-                    "{}Si c'est bien compris presses entrée",
+                    "{}Si c'est bien compris presser entrée",
                     termion::cursor::Goto(1, position.1 + 1)
                 )
                 .unwrap();
@@ -153,7 +153,7 @@ pub fn walkthrough() -> String {
     print_delayed("On résume :".chars(), None, color::Reset, 20, &mut term);
 
     let message = format!(
-        "\t{bold}{green}✔️{reset} Implementer l'exercice demander ",
+        "\t{bold}{green}✔️{reset} Implementer l'exercice demandé ",
         bold = style::Bold,
         green = color::Fg(color::Green),
         reset = style::Reset
@@ -162,7 +162,7 @@ pub fn walkthrough() -> String {
     print_delayed(message.chars(), None, color::Reset, 20, &mut term);
 
     let message = format!(
-        "\t{bold}{green}✔️{reset} Utiliser la commande {bold}{green}`./formeman next`{reset}",
+        "\t{bold}{green}✔️{reset} Utiliser la commande {bold}{green}`./foreman next`{reset}",
         bold = style::Bold,
         green = color::Fg(color::Green),
         reset = style::Reset
@@ -180,7 +180,7 @@ pub fn walkthrough() -> String {
     print_delayed(message.chars(), None, color::Reset, 20, &mut term);
 
     let message = format!(
-        "\t{bold}{red}❌{reset}  Sinon c'est la honte et vous êtes bloquer tant que l'exercice n'est pas validé",
+        "\t{bold}{red}❌{reset}  Sinon c'est la honte et vous êtes bloqués tant que l'exercice n'est pas validé",
         bold = style::Bold,
         red = color::Fg(color::Red),
         reset = style::Reset
@@ -209,7 +209,7 @@ pub fn walkthrough() -> String {
 
     let team_name = type_team_name(&mut term);
     let message = format!(
-        "\"{cyan}{bold}{team_name}{reset}\", personellement j'aurai choisi un nom plus badass, on valide ? {bold}({green}O{reset}/{red}N{reset})",
+        "\"{cyan}{bold}{team_name}{reset}\", personnellement j'aurai choisi un nom plus badass, on valide ? {bold}({green}O{reset}/{red}N{reset})",
         bold = style::Bold,
         green = color::Fg(color::Green),
         red = color::Fg(color::Red),

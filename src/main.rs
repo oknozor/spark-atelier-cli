@@ -34,12 +34,12 @@ fn main() -> Result<(), Error> {
         .about("Cli pour l'atelier spark - Université de Lille - IFI - 2019")
         .subcommand(
             SubCommand::with_name("init")
-                .about("initialiser votre l'atelier")
+                .about("initialiser votre atelier")
                 .arg(
                     Arg::with_name("hard")
                         .short("h")
                         .long("hard")
-                        .help("réinitialise le l'atelier (attention cela supprimera votre progression actuelle)")
+                        .help("réinitialise l'atelier (attention cela supprimera votre progression actuelle)")
                         .value_name("TEAM_NAME")
                         .required(false)
                         .takes_value(true)
@@ -66,7 +66,7 @@ fn main() -> Result<(), Error> {
         }
 
         let team = dashboard::create_team(&team_name)
-            .expect("Une erreur est survenue, contactes Paul ou Lucas");
+            .expect("Une erreur est survenue, contacter Paul, Florian ou Lucas");
 
         foreman_config::write(&team)?;
         println!("{}", foreman_config::get().unwrap().step);
@@ -82,14 +82,14 @@ fn main() -> Result<(), Error> {
                 command::git::merge(config.step).unwrap();
 
                 let team = dashboard::step_forward(&config)
-                    .expect("Contact Paul ou Lucas quelque chose c'est mal passé");
+                    .expect("Contact Paul, Florian ou Lucas quelque chose c'est mal passé");
 
                 foreman_config::write(&team)?;
                 wizard::congrat();
             }
         } else {
             dashboard::step_failed(&config)
-                .expect("Contact Paul ou Lucas quelque chose c'est mal passé");
+                .expect("Contact Paul, Florian ou Lucas quelque chose c'est mal passé");
             wizard::shame();
         }
     }
