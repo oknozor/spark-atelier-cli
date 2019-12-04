@@ -46,7 +46,6 @@ fn main() -> Result<(), Error> {
                 ),
         )
         .subcommand(SubCommand::with_name("next").about("Passer à l'étape suivante"))
-        .subcommand(SubCommand::with_name("info").about("Affiche votre progression actuelle"))
         .get_matches();
 
     if let Some(_) = _matches.subcommand_matches("info") {
