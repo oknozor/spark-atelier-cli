@@ -21,10 +21,6 @@ use error::Error;
 
 extern crate short_crypt;
 
-//TODO:
-// - mettre la vrai URL
-// - optional (maven color)
-// - step hint
 const DASHBOARD_URL: &str = "http://spark-leaderboard-backend.hoohoot.org";
 
 fn main() -> Result<(), Error> {
