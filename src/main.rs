@@ -44,10 +44,6 @@ fn main() -> Result<(), Error> {
         .subcommand(SubCommand::with_name("next").about("Passer à l'étape suivante"))
         .get_matches();
 
-    if let Some(_) = _matches.subcommand_matches("info") {
-        println!("{:?}", foreman_config::get().unwrap());
-    }
-
     if let Some(matches) = _matches.subcommand_matches("init") {
         let team_name;
 
@@ -64,12 +60,11 @@ fn main() -> Result<(), Error> {
             .expect("Une erreur est survenue, contacter Paul, Florian ou Lucas");
 
         foreman_config::write(&team)?;
-        println!("{}", foreman_config::get().unwrap().step);
     }
 
     if let Some(_) = _matches.subcommand_matches("next") {
         let config = foreman_config::get()?;
-        let test_passed = command::maven::test().unwrap();
+        let test_passed = command::maven::test(config.step).unwrap();
 
         if test_passed {
             command::git::add().unwrap();

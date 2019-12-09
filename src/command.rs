@@ -37,9 +37,10 @@ pub mod maven {
     use std::process::Command;
     use std::process::Stdio;
 
-    pub fn test() -> Result<bool, Error> {
+    pub fn test(step: i32) -> Result<bool, Error> {
         let mut child = Command::new("mvn")
             .arg("test")
+            .arg(step_to_letters(step))
             .stdout(Stdio::piped())
             .spawn()?;
 
@@ -49,5 +50,24 @@ pub mod maven {
 
         let success = child.wait()?.success();
         Ok(success)
+    }
+
+    fn step_to_letters(step: i32) -> String {
+        let spelled_step = match step {
+            1 => Some("One"),
+            2 => Some("Two"),
+            3 => Some("Three"),
+            4 => Some("Four"),
+            5 => Some("Five"),
+            6 => Some("Six"),
+            7 => Some("Seven"),
+            _ => None
+        };
+
+        if let Some(step) = spelled_step {
+            format!("-Dtest=Step{}Test", step)
+        } else {
+            String::from("")
+        }
     }
 }
