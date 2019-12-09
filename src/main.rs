@@ -66,7 +66,9 @@ fn main() -> Result<(), Error> {
         let config = foreman_config::get()?;
         let test_passed = command::maven::test(config.step).unwrap();
 
-        if test_passed {
+        if config.step == 7 && test_passed {
+            wizard::win();
+        } else if test_passed {
             command::git::add().unwrap();
             if let Ok(_) = command::git::commit() {
                 command::git::merge(config.step).unwrap();

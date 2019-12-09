@@ -282,6 +282,24 @@ pub fn congrat() {
     );
 }
 
+pub fn win() {
+    let mut term: Terminal = MouseTerminal::from(io::stdout().into_raw_mode().unwrap());
+
+    let message = format!(
+        "Félicitation {red}camarades{reset} vous avez terminé l'atelier!!!",
+        red = color::Fg(color::Red),
+        reset = style::Reset,
+    );
+
+    print_delayed(
+        message.chars(),
+        None,
+        color::Reset,
+        20,
+        &mut term,
+    );
+}
+
 fn print_delayed<T>(
     chars: Chars,
     bold: Option<style::Bold>,
